@@ -33,7 +33,8 @@ application {
 
 jib {
     from {
-        image = "arm64v8/openjdk:11-jre"
+//        image = "arm64v8/openjdk:11-jre"
+        image = "openjdk@sha256:e0a3a408dfab7978f5a5186822ebeb3c2afaa47af0928c19c783b23461adbd89"
     }
     to {
         image = "192.168.86.111:16443/ddklient" // TODO: fix this

@@ -38,15 +38,9 @@ jib {
     to {
         image = "192.168.86.111:16443/ddklient" // TODO: fix this
         tags = setOf("$version", "$version.${extra["buildNumber"]}")
-//        auth {
-//
-//        }
-//        auth {
-//            username = System.getenv("DOCKERHUB_USERNAME")
-//            password = System.getenv("DOCKERHUB_PASSWORD")
-//        }
     }
     container {
+        mainClass = "ddklient.AppKt"
         labels = mapOf(
                 "maintainer" to "Jim Schneidereit https://github.com/jschneidereit",
                 "org.opencontainers.image.title" to "A dynamic dns client in kotlin jib",

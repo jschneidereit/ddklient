@@ -1,6 +1,6 @@
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.3.61"
-    id("com.google.cloud.tools.jib") version "1.3.0"
+    id("com.google.cloud.tools.jib") version "2.0.0"
     application
     java
 }
@@ -38,10 +38,13 @@ jib {
     to {
         image = "192.168.86.111:16443/ddklient" // TODO: fix this
         tags = setOf("$version", "$version.${extra["buildNumber"]}")
-        auth {
-            username = System.getenv("DOCKERHUB_USERNAME")
-            password = System.getenv("DOCKERHUB_PASSWORD")
-        }
+//        auth {
+//
+//        }
+//        auth {
+//            username = System.getenv("DOCKERHUB_USERNAME")
+//            password = System.getenv("DOCKERHUB_PASSWORD")
+//        }
     }
     container {
         labels = mapOf(

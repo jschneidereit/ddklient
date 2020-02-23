@@ -24,7 +24,7 @@ fun getIp() = runBlocking {
 fun submit(cache: Cache, config: Configuration): List<HttpResponse> = runBlocking {
     HttpClient(CIO).use { c ->
         getTasks(cache, config).map { task ->
-            c.post {
+            c.post<HttpResponse> {
                 url(config.api())
                 body = gson.toJson(task)
             }

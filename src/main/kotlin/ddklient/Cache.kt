@@ -3,13 +3,12 @@ package ddklient
 import org.apache.commons.validator.routines.InetAddressValidator
 import java.io.File
 
-const val CACHE_ENV_KEY = "DDNS_CACHE_DIR"
 private val validator = InetAddressValidator.getInstance()
 
 class Cache {
     private var warm = ""
     private val cold = lazy {
-        File(System.getenv(CACHE_ENV_KEY) ?: "").also {
+        File(System.getenv(DDK_CACHE_DIR_KEY) ?: "").also {
             if (!it.exists() && it.path.isNotBlank()) {
                 try {
                     it.createNewFile()

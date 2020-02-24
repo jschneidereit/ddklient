@@ -17,7 +17,7 @@ private val validIpRows = arrayOf(row(validIpv4), row(validIpv6))
 
 class CacheTests : StringSpec({
     "cached ip should work without a valid cache file path" {
-        withEnvironment(CACHE_ENV_KEY to "") {
+        withEnvironment(DDK_CACHE_DIR_KEY to "") {
             val sut = Cache()
             sut.getCachedIp() shouldBe ""
 
@@ -30,7 +30,7 @@ class CacheTests : StringSpec({
 
     "cached ip should be set in cache file" {
         val temp = createTempFile().also { it.deleteOnExit() }
-        withEnvironment(CACHE_ENV_KEY to temp.path) {
+        withEnvironment(DDK_CACHE_DIR_KEY to temp.path) {
             val sut = Cache()
             sut.getCachedIp() shouldBe ""
 
@@ -46,7 +46,7 @@ class CacheTests : StringSpec({
             val temp = createTempFile().also { it.deleteOnExit() }
             temp.writeText(ip)
 
-            withEnvironment(CACHE_ENV_KEY to temp.path) {
+            withEnvironment(DDK_CACHE_DIR_KEY to temp.path) {
                 val sut = Cache()
                 sut.getCachedIp() shouldBe ip
             }
@@ -54,7 +54,7 @@ class CacheTests : StringSpec({
     }
 
     "cache will reject an invalid ip address" {
-        withEnvironment(CACHE_ENV_KEY to "") {
+        withEnvironment(DDK_CACHE_DIR_KEY to "") {
             val sut = Cache()
             sut.setCachedIp(validIpv4)
             forall(row(""), row(UUID.randomUUID().toString()), row("\t"), row("\n"), row("")) { ip ->
@@ -81,7 +81,7 @@ class CacheTests : StringSpec({
 
     "cache should prioritize warm over cold storage" {
         val temp = createTempFile().also { it.deleteOnExit() }
-        withEnvironment(CACHE_ENV_KEY to temp.path) {
+        withEnvironment(DDK_CACHE_DIR_KEY to temp.path) {
             val first = Cache()
             first.setCachedIp(validIpv4)
 

@@ -1,4 +1,6 @@
-# dynamicdns-client-kotlin
-A dynamic dns client written in kotlin, starting with namecheap
+# ddklient
 
-Making a small kotlin docker image inspiration: https://github.com/peter-evans/kotlin-jib
+A dynamic dns client written in kotlin, starting with namecheap. 
+
+Trying out: google jib, github actions, and an ARM openjdk image for updating dns on a raspberry pi 4.
+

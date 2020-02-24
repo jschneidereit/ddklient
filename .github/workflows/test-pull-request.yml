@@ -5,6 +5,12 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - uses: actions-hub/docker@master
+      env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     - uses: OrangeLabs-moe/gradle-actions@v5.0-openjdk-13
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       with:
         args: test jibDockerBuild

@@ -37,18 +37,22 @@ jib {
         image = "openjdk@sha256:e0a3a408dfab7978f5a5186822ebeb3c2afaa47af0928c19c783b23461adbd89"
     }
     to {
-        image = "192.168.86.111:16443/ddklient" // TODO: fix this
+        image = "jschneidereit/ddklient" // TODO: fix this
         tags = setOf("$version", "$version.${extra["buildNumber"]}")
+        auth {
+            username = System.getenv("USERNAME")
+            password = System.getenv("PASSWORD")
+        }
     }
     container {
         mainClass = "ddklient.AppKt"
         labels = mapOf(
                 "maintainer" to "Jim Schneidereit https://github.com/jschneidereit",
-                "org.opencontainers.image.title" to "A dynamic dns client in kotlin jib",
-                "org.opencontainers.image.description" to "A dynamic dns client in a kotlin jib container, initially for namecheap",
+                "org.opencontainers.image.title" to "ddklient: A dynamic dns client in kotlin jib container",
+                "org.opencontainers.image.description" to "ddklient: A dynamic dns client in a kotlin jib container",
                 "org.opencontainers.image.version" to "$version",
                 "org.opencontainers.image.authors" to "Jim Schneidereit https://github.com/jschneidereit",
-                "org.opencontainers.image.url" to "https://github.com/jschneidereit/dynamicdns-client-kotlin",
+                "org.opencontainers.image.url" to "https://github.com/jschneidereit/ddklient",
                 "org.opencontainers.image.vendor" to "https://github.com/jschneidereit",
                 "org.opencontainers.image.licenses" to "MIT"
         )

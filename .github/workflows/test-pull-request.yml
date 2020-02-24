@@ -4,6 +4,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
+    - uses: actions-hub/docker@master
     - uses: OrangeLabs-moe/gradle-actions@v5.0-openjdk-13
       with:
         args: test jibDockerBuild

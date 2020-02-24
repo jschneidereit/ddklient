@@ -5,8 +5,8 @@ plugins {
     java
 }
 
-version = "0.1"
-val buildNumber by extra("0")
+version = "0.0"
+val buildNumber by extra("1")
 
 repositories {
     mavenCentral()
@@ -37,11 +37,11 @@ jib {
         image = "openjdk@sha256:e0a3a408dfab7978f5a5186822ebeb3c2afaa47af0928c19c783b23461adbd89"
     }
     to {
-        image = "jschneidereit/ddklient" // TODO: fix this
+        image = "jschneidereit/ddklient"
         tags = setOf("$version", "$version.${extra["buildNumber"]}")
         auth {
-            username = System.getenv("USERNAME")
-            password = System.getenv("PASSWORD")
+            username = System.getenv("DOCKER_USERNAME")
+            password = System.getenv("DOCKER_PASSWORD")
         }
     }
     container {

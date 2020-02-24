@@ -6,4 +6,4 @@ jobs:
     - uses: actions/checkout@master
     - uses: OrangeLabs-moe/gradle-actions@v5.0-openjdk-13
       with:
-        args: test
+        args: test jibDockerBuild

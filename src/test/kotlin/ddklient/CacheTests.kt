@@ -43,10 +43,11 @@ class CacheTests : StringSpec({
 
     "cached ip in file should be seeded on access of cache" {
         forall(*validIpRows) { ip ->
-            val temp = createTempFile().also { it.deleteOnExit() }
+            val directory = createTempDir().apply { deleteOnExit() }
+            val temp = tryBuildCacheFile(directory).apply { deleteOnExit() }
             temp.writeText(ip)
 
-            withEnvironment(DDK_CACHE_DIR_KEY to temp.path) {
+            withEnvironment(DDK_CACHE_DIR_KEY to directory.path) {
                 val sut = Cache()
                 sut.getCachedIp() shouldBe ip
             }
@@ -80,18 +81,17 @@ class CacheTests : StringSpec({
     }
 
     "cache should prioritize warm over cold storage" {
-        val temp = createTempFile().also { it.deleteOnExit() }
-        withEnvironment(DDK_CACHE_DIR_KEY to temp.path) {
+        val directory = createTempDir().apply { deleteOnExit() }
+        val temp = tryBuildCacheFile(directory).apply { deleteOnExit() }
+        withEnvironment(DDK_CACHE_DIR_KEY to directory.path) {
             val first = Cache()
             first.setCachedIp(validIpv4)
 
-            val nonsense = UUID.randomUUID().toString()
-            temp.writeText(nonsense)
-
+            temp.writeText(validIpv6)
             first.getCachedIp() shouldBe validIpv4
 
             val second = Cache()
-            second.getCachedIp() shouldBe nonsense
+            second.getCachedIp() shouldBe validIpv6
         }
     }
 })

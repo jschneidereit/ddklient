@@ -37,7 +37,7 @@ jib {
     }
     to {
         image = "jschneidereit/ddklient"
-        tags = setOf("$version", "$version.${extra["buildNumber"]}")
+        tags = setOf("$version")
         auth {
             username = System.getenv("DOCKER_USERNAME")
             password = System.getenv("DOCKER_PASSWORD")

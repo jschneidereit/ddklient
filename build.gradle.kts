@@ -5,8 +5,7 @@ plugins {
     java
 }
 
-version = "0.0"
-val buildNumber by extra("1")
+version = "0.0.1" // TODO: use github-tag-action to set this at merge time
 
 repositories {
     mavenCentral()

@@ -17,7 +17,7 @@ internal fun tryBuildCacheFile(directory: File): File {
     return try {
         directory.resolve(cacheFileName).apply { createNewFile() }
     } catch (ex: Exception) {
-        System.err.println("""
+        err("""
         Unable to create cache file at the supplied path '$directory'.
         WIll fallback to in-memory cache only.
         Caught exception: $ex
@@ -29,7 +29,13 @@ internal fun tryBuildCacheFile(directory: File): File {
 class Cache {
     private var warm = ""
     private val cold = lazy {
-        tryBuildCacheFile(File(System.getenv(DDK_CACHE_DIR_KEY) ?: ""))
+        tryBuildCacheFile(File(System.getenv(DDK_CACHE_DIR_KEY) ?: "")).also {
+            if (it.exists()) {
+                log("cold cache is writing to ${it.path}")
+            } else {
+                err("the specified directory '${System.getenv(DDK_CACHE_DIR_KEY) ?: ""}' does not exist or is a file")
+            }
+        }
     }
 
     private fun getCacheFileContents(): String {
@@ -62,7 +68,7 @@ class Cache {
 
     fun setCachedIp(ip: String): Boolean = ip.trim().let {
         return if (!validator.isValid(it)) {
-            System.err.println("Error: tried to set cache with invalid ip address: '$ip'.")
+            err("tried to set cache with invalid ip address: '$ip'.")
             false
         } else {
             warm = it

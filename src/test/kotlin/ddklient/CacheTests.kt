@@ -76,7 +76,7 @@ class CacheTests : StringSpec({
             cache.setCachedIp(nonsense) shouldBe false
         }
 
-        error shouldStartWith "Error"
+        error shouldStartWith ERROR_PREFIX
         error shouldContain nonsense
     }
 

@@ -19,6 +19,7 @@ class Configuration {
             throw IllegalArgumentException("Env var $DDK_KIND_KEY must be set with a valid kind, valid values: ${ClientKind.values()}.")
         }
 
+        log("setting $DDK_KIND_KEY: '$kind'")
         ClientKind.valueOf(kind.toUpperCase())
     }
 
@@ -50,6 +51,7 @@ class Configuration {
             throw IllegalArgumentException("Apache commons validator considers the domain '$domain' invalid.")
         }
 
+        log("setting $DDK_DOMAIN_KEY: '$domain'")
         domain
     }
 
@@ -61,6 +63,7 @@ class Configuration {
             throw IllegalArgumentException("Env var $DDK_HOSTS_KEY must be set with one or more host for namecheap. E.g.: 'www' or '@,www'.")
         }
 
+        log("setting $DDK_HOSTS_KEY: '$hosts'")
         hosts
     }
 }

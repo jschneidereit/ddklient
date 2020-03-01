@@ -2,39 +2,51 @@ package ddklient
 
 import io.ktor.http.HttpStatusCode
 
+
+
 fun main() {
-    var running = true
-    println("Starting up ddklient")
+    var running: Boolean
+    log("starting up")
 
     val config = Configuration()
     val cache = Cache()
 
     Runtime.getRuntime().addShutdownHook(Thread {
-        println("Shutting down ddklient")
+        log("shutting down")
         running = false
     })
 
+    log("executing initial check and update")
+    running = update(cache, config)
+
+    log("starting to monitor with a timeout of ${config.timeout() / 1000} seconds")
     while (running) {
         update(cache, config)
         Thread.sleep(config.timeout())
     }
 }
 
-fun update(cache: Cache, configuration: Configuration) {
-    val ip = getIp()
-    val cached = cache.getCachedIp()
-    val stale = !cached.equals(ip, ignoreCase = true)
+fun update(cache: Cache, configuration: Configuration): Boolean {
+    return try {
+        val ip = getIp()
+        val cached = cache.getCachedIp()
+        val stale = !cached.equals(ip, ignoreCase = true)
 
-    if (stale) {
-        println("Submitting updated cache with new IP address: $ip")
+        if (stale) {
+            log("submitting updated cache with new IP address: $ip")
+            cache.setCachedIp(ip)
 
-        cache.setCachedIp(ip)
-
-        if (makeRequests(cache, configuration).any { it.status != HttpStatusCode.OK }) {
-            System.err.println("A response failed, clearing cache so next run will proceed")
-            cache.clearCachedIp()
-        } else {
-            println("All API requests responded with OK")
+            if (makeRequests(cache, configuration).any { it.status != HttpStatusCode.OK }) {
+                err("a response failed, clearing cache so next run will proceed")
+                cache.clearCachedIp()
+            } else {
+                err("all API requests responded with OK")
+            }
         }
+
+        true
+    } catch (ex: Exception) {
+        err("shutting down due to caught unexpected exception when trying to update: $ex")
+        false
     }
 }

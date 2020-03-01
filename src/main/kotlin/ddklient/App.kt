@@ -30,8 +30,8 @@ fun update(cache: Cache, configuration: Configuration): Boolean {
     return try {
         val ip = getIp()
         val cached = cache.getCachedIp()
-        val stale = !cached.equals(ip, ignoreCase = true)
 
+        val stale = cached.isBlank() || !ip.equals(cached, ignoreCase = true)
         if (stale) {
             log("submitting updated cache with new IP address: $ip")
             cache.setCachedIp(ip)
@@ -42,6 +42,8 @@ fun update(cache: Cache, configuration: Configuration): Boolean {
             } else {
                 err("all API requests responded with OK")
             }
+        } else {
+            log("cache is still valid: current ip '$ip' current cache '$cached'")
         }
 
         true

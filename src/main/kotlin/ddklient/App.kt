@@ -17,7 +17,7 @@ fun main() {
     })
 
     log("executing initial check and update")
-    running = update(cache, config)
+    running = update(cache, config, initial = true)
 
     log("starting to monitor with a timeout of ${config.timeout() / 1000} seconds")
     while (running) {
@@ -26,24 +26,27 @@ fun main() {
     }
 }
 
-fun update(cache: Cache, configuration: Configuration): Boolean {
+fun update(cache: Cache, configuration: Configuration, initial: Boolean = false): Boolean {
     return try {
         val ip = getIp()
         val cached = cache.getCachedIp()
 
         val stale = cached.isBlank() || !ip.equals(cached, ignoreCase = true)
         if (stale) {
-            log("submitting updated cache with new IP address: $ip")
+            log("cache miss: submitting updated cache with new IP address: $ip")
             cache.setCachedIp(ip)
 
             if (makeRequests(cache, configuration).any { it.status != HttpStatusCode.OK }) {
                 err("a response failed, clearing cache so next run will proceed")
                 cache.clearCachedIp()
             } else {
-                err("all API requests responded with OK")
+                log("all API requests responded with OK")
             }
         } else {
-            log("cache is still valid: current ip '$ip' current cache '$cached'")
+            if (initial) {
+                log("cache hit: current ip '$ip' current cache '$cached'")
+                log("subsequent cache hits will not be logged")
+            }
         }
 
         true

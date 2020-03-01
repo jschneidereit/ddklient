@@ -5,7 +5,7 @@ plugins {
     java
 }
 
-version = "0.0.3" // TODO: use github-tag-action to set this at merge time
+version = "0.0.4" // TODO: use github-tag-action to set this at merge time
 
 repositories {
     mavenCentral()
